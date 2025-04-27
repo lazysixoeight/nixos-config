@@ -7,6 +7,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./overlays
   ];
 
   nix.settings.experimental-features = [
@@ -26,9 +27,9 @@
     TERMINAL = "foot";
   };
 
-  #
-  # Packages
-  #
+#
+# Packages
+#
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
     # Utils
@@ -98,13 +99,13 @@
 
   programs.nix-ld.enable = true; # Run unpatched dynamic binaries, ex: Mason.nvim
 
-  #
-  # Display Services
-  #
+#
+# Display Services
+#
   programs.sway.enable = true;
-  #
-  # Networking
-  #
+#
+# Networking
+#
   networking = {
     networkmanager.enable = true;
     hostName = "nixos";
@@ -120,15 +121,15 @@
     dnsovertls = "true";
   };
 
-  #
-  # Boot Settings
-  #
+#
+# Boot Settings
+#
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  #
-  # Hardware Stuff
-  #
+#
+# Hardware Stuff
+#
   services.printing.enable = true; # CUPS
   services.pipewire = {
     enable = true;
@@ -146,9 +147,9 @@
     ];
   };
 
-  #  
-  # Trivial Stuff
-  #
+#
+# Trivial Stuff
+#
   time.timeZone = "Asia/Jakarta";
   i18n.defaultLocale = "en_US.UTF-8";
 
