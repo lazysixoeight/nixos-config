@@ -1,8 +1,8 @@
 {
-  description = "One flake to rule them all.";
+  description = "One flake to rule them all";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11"; # Update this when you want to upgrade. Also be careful..
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Unstable for some packages
   };
 
@@ -17,16 +17,16 @@
       inherit system;
       modules = [
         ./configuration.nix
-	{
+        {
           nixpkgs.overlays = [
             (final: prev: {
               unstable = import nixpkgs-unstable {
                 inherit system;
-		config.allowUnfree = true;
-	      };
-	    })
-	  ];
-	}
+                config.allowUnfree = true;
+              };
+            })
+          ];
+        }
       ];
       # ...
     };
