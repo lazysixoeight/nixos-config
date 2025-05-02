@@ -11,7 +11,7 @@ let
     owner = "ComposersDesktop";
     repo = "CDP8";
     rev = "main";
-    hash = "sha256-FAb3phI+/MsqLkRYgAIhsyjKtKS39D0VqyhMEecLdi0=";
+    hash = "sha256-JqsUd//aT5lHo2KDGJGdg1kLlHESw3J/sqBInc8EBHU=";
   };
 in
 {

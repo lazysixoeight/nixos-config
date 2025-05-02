@@ -19,12 +19,14 @@
   users.users.lazy = {
     isNormalUser = true;
     description = "lazy";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "jackaudio" ];
     shell = pkgs.fish;
   };
   environment.variables = {
     EDITOR = "nvim";
     TERMINAL = "foot";
+    VST_PATH = "/run/current-system/sw/lib/vst";
+    VST3_PATH = "/run/current-system/sw/lib/vst3";
   };
 
 #
@@ -35,11 +37,14 @@
     # Utils
     git # Git.
     python312 # (Vanilla) Python for scripting
-    fastfetch # System fetch
     brightnessctl # Brightness control
     inotify-tools # inotify Stuff
     libnotify # Notifications
     dconf # State Management
+    figlet # Useless Text to ASCII Tool
+    dotacat # Useless Rainbow Cat Tool
+    bfetch # System Fetch
+    pfetch
 
     # Build Tools
     gcc # Because lazy.nvim needs it
@@ -55,8 +60,7 @@
     stow # Dotfiles Management
     gucharmap # Glyphs Search
     font-manager # Font Informations
-    simp1e-cursors # Cursor theme
-    tango-icon-theme # Icon theme
+    tango-icon-theme # Icon Theme
 
     # Wayland/X11 Utils
     wl-clipboard # Clipboard
@@ -86,10 +90,11 @@
     yt-dlp # Media Ripping
     networkmanagerapplet # Networking
 
-    # Audio-related
-    renoise # DAW
-    unstable.bespokesynth # Modular Synthesizer
+    # Sounds Production
+    renoise # Tracker-based DAW
+    cardinal # Modular Synthesis
     rubberband # Time-stretching and Pitch-shifting
+    cdp # Audio Manipulation
     soulseekqt # Audio P2P
   ];
   fonts.packages = with pkgs; [
@@ -103,6 +108,85 @@
 # Display Services
 #
   programs.sway.enable = true;
+
+#
+# Theming
+#
+  qt = {
+    enable = true;
+    platformTheme = "gtk2";
+  };
+  
+  home-manager.backupFileExtension = "backup";
+  home-manager.users.lazy = {
+    # Set cursor
+    home.pointerCursor = {
+      name = "Vanilla-DMZ";
+      size = 24;
+      package = pkgs.vanilla-dmz;
+      gtk.enable = true;
+    };
+    gtk = {
+      enable = true;
+      cursorTheme = {
+        name = "Vanilla-DMZ";
+        package = pkgs.vanilla-dmz;
+        size = 24;
+      };
+      # Set font
+      font = {
+        name = "DejaVu Sans";
+        size = 11;
+      };
+      # Set GTK theme
+      theme = {
+        name = "Adwaita-dark";
+        package = pkgs.gnome-themes-extra;
+      };
+      # Set GTK icon theme
+      iconTheme = {
+        name = "Tango";
+        package = pkgs.tango-icon-theme;
+      };
+    };
+    home.stateVersion = "24.11";
+  };
+  # Boot Theming
+  boot.plymouth = {
+    enable = true;
+    theme = "monoarch";
+    themePackages = [ pkgs.plymouth-monoarch-theme ];
+    extraConfig = ''
+      Debug=true
+    '';
+  };
+
+#
+# Boot Settings
+#
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+
+    kernelParams = [
+      "splash"
+      "quiet"
+      "verbose"
+      "plymouth.debug"
+    ];
+    loader.timeout = 0;
+  };
+
+#
+# Audio
+#
+  services.pipewire = {
+    enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
+    jack.enable = true;
+  };
+
 #
 # Networking
 #
@@ -122,21 +206,9 @@
   };
 
 #
-# Boot Settings
-#
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-#
-# Hardware Stuff
+# Drivers
 #
   services.printing.enable = true; # CUPS
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-    jack.enable = true;
-  };
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
