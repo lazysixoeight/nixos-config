@@ -18,9 +18,20 @@ in
   cdp = super.stdenv.mkDerivation {
     name = "CDP 8.0.1";
 
+    nativeBuildInputs = with super.pkgs; [
+      pkg-config
+    ];
+
     buildInputs = with super.pkgs; [
       clang
       cmake
+      gcc
+      gnumake
+      autoconf
+      automake
+      libtool
+      texinfo
+      automake
     ];
 
     buildCommand = ''
