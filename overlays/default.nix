@@ -9,6 +9,11 @@
     (import ./xterminate.nix)
     #(import ./sunvox.nix)
     (import ./renoise.nix)
+    (import ./reaper.nix)
+    (import ./lsp-plugins.nix)
+    (import ./vitalium.nix)
+    (import ./nix-devShell.nix)
+    #(import ./waybar.nix)
     #(import ./oi-grandad.nix)
     #(import ./ffmpeg.nix)
   ];

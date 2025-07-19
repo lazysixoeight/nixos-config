@@ -10,8 +10,8 @@ in
 
 {
   imports = [
-    ./hardware-configuration.nix
-    ./overlays
+    ../hardware-configuration.nix
+    ../overlays
   ];
 
   nix.settings.experimental-features = [
@@ -19,11 +19,10 @@ in
     "flakes"
   ];
 
-  programs.fish.enable = true;
   users.users.${user} = {
     isNormalUser = true;
     description = "${user}";
-    extraGroups = [ "networkmanager" "wheel" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "input" ];
     shell = pkgs.fish;
   };
   environment.variables = {
@@ -41,84 +40,101 @@ in
     # Utils
     git # Git.
     brightnessctl # Brightness Control
+    killall # to kill
     pulseaudio # Volume Control
     inotify-tools # inotify Stuff
     libnotify # Notifications
+    samba # Windows-Linux communication of some sort
     dconf # State Management
     ffmpeg # Media Manipulation
-    figlet # Useless Text to ASCII Tool
-    dotacat # Useless Rainbow Cat Tool
-    bfetch # System Fetch Wrapper
-    pfetch # System Fetch
+    xterminate # Makes certain apps launch the desired terminal
+    wget # Direct Downloads
+    yt-dlp # Media Ripping
     jq # Text Parser
+    fd # Better Find
+    fzf # Fuzzy Finder
+    ripgrep # Faster and modern grep
     
     # Wine Stuff
-    wineWowPackages.wayland
-    wineasio
-    winetricks
+    wineWow64Packages.staging # Windows Compatibility Layer
+    lutris # Running Windows Games
+    bottles # General Prefix Management
+    #wineasio # Dynamic libraries providing ASIO to JACK translation layer
+    winetricks # Wine Scripts
 
     # Build Tools
     gcc # Because lazy.nvim needs it
     rustup # Needed by some LSPs
     python312 # Python.
     gdb # Debug Tool
-    tk # Pure Data dependency
+    nix-devShell # Creates flake.nix for devShell
 
     # Archiving
     atool # Unpacking and packing wrapper
     unrar
     unzip
     gnutar
+    p7zip
 
     # Theming
     stow # Dotfiles Management
     gucharmap # Glyphs Search
     font-manager # Font Informations
+    libsForQt5.qt5ct
+    qt6ct
+    adwaita-qt
+    adwaita-qt6
 
     # Wayland/X11 Utils
     wl-clipboard # Clipboard
     waybar # Statusbar
-    feh # Image Utility (X11/Xwayland)
-    dunst # Notifications
+    dunst # Notification
+    swaylock-effects # Lockscreen
+    swayidle # Idle Handler
     wob # Progress Bar (Volume, Brightness, etc.)
+    rofi # App Launcher
 
     # Apps
-    unstable.neovim # Text Editor
-    wofi # App Launcher
-    firefox # Browser
+    neovim # Text Editor
+    discord # Communication
+    obs-studio # Screen Capture
+    firefox-bin # Browser
+    libreoffice-still # Document Editor
     foot # Terminal
-    libreoffice # Document Editor
-    xterminate # Makes certain apps launch the desired terminal
+    gimp # Image Manipulation Program
     yazi # File Manager
-    vlc # Video Player
+    mpv # Media Player
     btop # System Monitor
-    lutris # Run Games
-    fsearch # Search for everything
     keepassxc # Password Manager
     steam # Games
-    wget # Direct Downloads
     qbittorrent # Torrenting
-    yt-dlp # Media Ripping
 
-    # Sounds Production
-    renoise # Tracker-based DAW
-    cardinal # Modular Synthesis
-    plugdata
-    soulseekqt # Audio P2P
+    # Music Production
+    plugdata # Visual Programming Language for Audio
+    reaper # Digital Audio Workstation
+    reaper-reapack-extension # Reaper Package Manager
+    yabridge # Bridge to use Wine plugins on Linux native DAWs
+    yabridgectl # Yabridge CLI
+    decent-sampler # Sampler Plugin
+    chow-tape-model # Tape Recording Emulation
+    dexed # FM Synth
+    vitalium # Wavetable Synth
+    lsp-plugins # Linux Studio Plugins Suite
+    nicotine-plus # Audio P2P
   ];
   fonts.packages = with pkgs; [
     siji
     nerd-fonts.dejavu-sans-mono
+    corefonts
   ];
-  services.flatpak = {
-    enable = true;
-    remotes = [
-      { name = "flathub"; location = "https://flathub.org/repo/flathub.flatpakrepo"; }
-    ];
-    uninstallUnmanaged = false;
-  };
-
+  services.flatpak.enable = true;
+  
   programs.nix-ld.enable = true; # Run unpatched dynamic binaries, ex: Mason.nvim
+
+#
+# Shell
+#
+  programs.fish.enable = true;
 
 #
 # Display Services
@@ -127,12 +143,12 @@ in
   programs = {
     sway = {
       enable = true;
+      package = pkgs.swayfx;
       extraPackages = [];
     };
   };
-  #services.desktopManager.cosmic = {
+  #services.desktopManager.gnome = {
     #enable = true;
-    #xwayland.enable = true;
   #};
   services.displayManager.ly = {
     enable = true;
@@ -142,7 +158,7 @@ in
 #
   qt = {
     enable = true;
-    platformTheme = "gtk2";
+    platformTheme = "qt5ct";
   };
   
   home-manager.backupFileExtension = "backup";
@@ -163,8 +179,8 @@ in
     gtk = {
       enable = true;
       cursorTheme = {
-        name = "Vanilla-DMZ";
-        package = pkgs.vanilla-dmz;
+        name = "Simp1e";
+        package = pkgs.simp1e-cursors;
         size = 24;
       };
       # Set font
@@ -174,13 +190,13 @@ in
       };
       # Set GTK theme
       theme = {
-        name = "Gruvbox-Dark";
-        package = pkgs.gruvbox-gtk-theme;
+        name = "Adwaita-dark";
+        package = pkgs.gnome-themes-extra;
       };
       # Set GTK icon theme
       iconTheme = {
-        name = "Moka";
-        package = pkgs.faba-icon-theme;
+        name = "Adwaita";
+        package = pkgs.adwaita-icon-theme;
       };
     };
     home.stateVersion = "25.05";
@@ -196,6 +212,7 @@ in
 # Boot Settings
 #
   boot = {
+    kernelPackages = pkgs.linuxPackages_zen; # Linux kernel to use
     loader.grub = {
       enable = true;
       efiSupport = true;
@@ -206,7 +223,6 @@ in
       canTouchEfiVariables = true;
     };
     initrd.systemd.enable = true;
-
     consoleLogLevel = 3;
     initrd.verbose = false;
     kernelParams = [
@@ -236,18 +252,44 @@ in
     pulse.enable = true;
     alsa.enable = true;
     jack.enable = true;
-  };
 
+    extraConfig = {
+      pipewire = {
+        "20-clock-quantum" = {
+          "context.properties" = {
+            "default.clock.rate" = 48000;
+            "default.clock.quantum" = 2048;
+            "default.clock.min-quantum" = 64;
+            "default.clock.max-quantum" = 4096;
+          };
+        };
+      };
+    };
+  };
+  security.pam.loginLimits = [
+    {
+      domain = "@audio";
+      type = "-";
+      item = "rtprio";
+      value = "95";
+    }
+    {
+      domain = "@audio";
+      type = "-";
+      item = "memlock";
+      value = "unlimited";
+    }
+  ];
 #
 # Networking
 #
   networking = {
     networkmanager.enable = true;
-    hostName = "nixos";
+    hostName = "t480s";
   };
   services.resolved = {
     enable = true;
-    dnsovertls = "true";
+    dnsovertls = "opportunistic";
   };
 
 #
@@ -271,5 +313,5 @@ in
   time.timeZone = "Asia/Jakarta";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  system.stateVersion = "25.05"; # Not really trivial, don't change 'less you know what you're doing
+  system.stateVersion = "25.05"; # Not really trivial, don't change 'less a new release comes out
 }

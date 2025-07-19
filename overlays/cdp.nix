@@ -25,13 +25,6 @@ in
     buildInputs = with super.pkgs; [
       clang
       cmake
-      gcc
-      gnumake
-      autoconf
-      automake
-      libtool
-      texinfo
-      automake
     ];
 
     buildCommand = ''

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+rsync -avh \
+  --exclude="flake.lock" \
+  --exclude="hardware-configuration.nix" \
+  /etc/nixos/ $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
