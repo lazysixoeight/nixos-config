@@ -2,16 +2,14 @@
 # Hey me!! Only install what you need!!! #
 #----------------------------------------#
 
-{ config, pkgs, lib, ... }:
-
-let
-  user = "lazy";
-in
+{ pkgs, user, ... }:
 
 {
   imports = [
     ../hardware-configuration.nix
     ../overlays
+
+    ./modules/displayEnvironment.nix
   ];
 
   nix.settings.experimental-features = [
@@ -27,7 +25,7 @@ in
   };
   environment.variables = {
     EDITOR = "nvim";
-    TERMINAL = "foot";
+    TERMINAL = "alacritty";
     VST_PATH = [ "/run/current-system/sw/lib/vst" "/home/${user}/.vst" ];
     VST3_PATH = [ "/run/current-system/sw/lib/vst3" "/home/${user}/.vst3" ];
   };
@@ -42,18 +40,17 @@ in
     brightnessctl # Brightness Control
     killall # to kill
     pulseaudio # Volume Control
-    inotify-tools # inotify Stuff
-    libnotify # Notifications
-    samba # Windows-Linux communication of some sort
     dconf # State Management
     ffmpeg # Media Manipulation
-    xterminate # Makes certain apps launch the desired terminal
-    wget # Direct Downloads
+    aria2 # Direct Downloads
     yt-dlp # Media Ripping
+    fastfetch # System Fetch
     jq # Text Parser
     fd # Better Find
     fzf # Fuzzy Finder
     ripgrep # Faster and modern grep
+    ueberzugpp # Alacritty image support hack
+    linuxKernel.packages.linux_zen.cpupower # Change CPU frequency at runtime
     
     # Wine Stuff
     wineWow64Packages.staging # Windows Compatibility Layer
@@ -62,11 +59,12 @@ in
     #wineasio # Dynamic libraries providing ASIO to JACK translation layer
     winetricks # Wine Scripts
 
-    # Build Tools
+    # Build Tools/Dependency
     gcc # Because lazy.nvim needs it
     rustup # Needed by some LSPs
     python312 # Python.
     gdb # Debug Tool
+    brotli.lib
     nix-devShell # Creates flake.nix for devShell
 
     # Archiving
@@ -77,22 +75,10 @@ in
     p7zip
 
     # Theming
+    sddm-terminal # SDDM tty theme
     stow # Dotfiles Management
     gucharmap # Glyphs Search
     font-manager # Font Informations
-    libsForQt5.qt5ct
-    qt6ct
-    adwaita-qt
-    adwaita-qt6
-
-    # Wayland/X11 Utils
-    wl-clipboard # Clipboard
-    waybar # Statusbar
-    dunst # Notification
-    swaylock-effects # Lockscreen
-    swayidle # Idle Handler
-    wob # Progress Bar (Volume, Brightness, etc.)
-    rofi # App Launcher
 
     # Apps
     neovim # Text Editor
@@ -100,7 +86,10 @@ in
     obs-studio # Screen Capture
     firefox-bin # Browser
     libreoffice-still # Document Editor
-    foot # Terminal
+    alacritty # Cross-platform Terminal
+    xterminate # Alacritty xterm PATH wrapper
+    nicotine-plus # Audio P2P
+    prismlauncher # Minecraft Launcher
     gimp # Image Manipulation Program
     yazi # File Manager
     mpv # Media Player
@@ -110,17 +99,16 @@ in
     qbittorrent # Torrenting
 
     # Music Production
-    plugdata # Visual Programming Language for Audio
     reaper # Digital Audio Workstation
     reaper-reapack-extension # Reaper Package Manager
+    renoise # Tracker-based DAW
     yabridge # Bridge to use Wine plugins on Linux native DAWs
     yabridgectl # Yabridge CLI
-    decent-sampler # Sampler Plugin
-    chow-tape-model # Tape Recording Emulation
-    dexed # FM Synth
-    vitalium # Wavetable Synth
-    lsp-plugins # Linux Studio Plugins Suite
-    nicotine-plus # Audio P2P
+    
+    # Audio Plugins
+    distrho-ports # Vitalium, A Wavetable synth
+    oi-grandad # Granular Synth
+    jc303 # TB303 Emulator
   ];
   fonts.packages = with pkgs; [
     siji
@@ -139,75 +127,8 @@ in
 #
 # Display Services
 #
-  security.polkit.enable = true;
-  programs = {
-    sway = {
-      enable = true;
-      package = pkgs.swayfx;
-      extraPackages = [];
-    };
-  };
-  #services.desktopManager.gnome = {
-    #enable = true;
-  #};
-  services.displayManager.ly = {
-    enable = true;
-  };
-#
-# Theming
-#
-  qt = {
-    enable = true;
-    platformTheme = "qt5ct";
-  };
+  displayEnvironment.session = "sway"; # Defined in displayEnvironment.nix
   
-  home-manager.backupFileExtension = "backup";
-  home-manager.users.${user} = {
-    # Set cursor
-    home.pointerCursor = {
-      name = "Vanilla-DMZ";
-      size = 24;
-      package = pkgs.vanilla-dmz;
-      gtk.enable = true;
-    };
-    # Tell GNOME to use dark mode
-    dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-      };
-    };
-    gtk = {
-      enable = true;
-      cursorTheme = {
-        name = "Simp1e";
-        package = pkgs.simp1e-cursors;
-        size = 24;
-      };
-      # Set font
-      font = {
-        name = "DejaVu Sans";
-        size = 11;
-      };
-      # Set GTK theme
-      theme = {
-        name = "Adwaita-dark";
-        package = pkgs.gnome-themes-extra;
-      };
-      # Set GTK icon theme
-      iconTheme = {
-        name = "Adwaita";
-        package = pkgs.adwaita-icon-theme;
-      };
-    };
-    home.stateVersion = "25.05";
-  };
-  # Boot Theming
-  boot.plymouth = {
-    enable = true;
-    theme = "monoarch";
-    themePackages = [ pkgs.plymouth-monoarch-theme ];
-  };
-
 #
 # Boot Settings
 #
@@ -234,14 +155,10 @@ in
     ];
     loader.timeout = 2;
   };
-
-#
-# Portal (Allows desktop apps to access resources outside of their sandboxed environment)
-#
-  xdg.portal = {
+  boot.plymouth = {
     enable = true;
-    config = { common = { default = [ "gtk" ]; }; };
-    extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
+    theme = "monoarch";
+    themePackages = [ pkgs.plymouth-monoarch-theme ];
   };
 
 #
@@ -258,9 +175,9 @@ in
         "20-clock-quantum" = {
           "context.properties" = {
             "default.clock.rate" = 48000;
-            "default.clock.quantum" = 2048;
+            "default.clock.quantum" = 1024;
             "default.clock.min-quantum" = 64;
-            "default.clock.max-quantum" = 4096;
+            "default.clock.max-quantum" = 1024;
           };
         };
       };
@@ -295,8 +212,11 @@ in
 #
 # Drivers
 #
-  services.printing.enable = true; # CUPS
   services.dbus.enable = true;
+  services.printing = {
+    enable = true; 
+    drivers = [ pkgs.hplipWithPlugin ];
+  };
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -312,6 +232,8 @@ in
 #
   time.timeZone = "Asia/Jakarta";
   i18n.defaultLocale = "en_US.UTF-8";
+
+  documentation.man.generateCaches = false; # gtfo
 
   system.stateVersion = "25.05"; # Not really trivial, don't change 'less a new release comes out
 }

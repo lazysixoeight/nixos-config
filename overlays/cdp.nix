@@ -10,27 +10,39 @@ let
   cdp8 = super.fetchFromGitHub {
     owner = "ComposersDesktop";
     repo = "CDP8";
-    rev = "main";
-    hash = "sha256-JqsUd//aT5lHo2KDGJGdg1kLlHESw3J/sqBInc8EBHU=";
+    tag = "CDP8.0";
+    hash = "sha256-/L0ncIcB0OardDykhNHwJ3ae09Sh4iNOQSZRgNV7ZPQ=";
   };
 in
 {
-  cdp = super.stdenv.mkDerivation {
+  cdp = super.clangStdenv.mkDerivation {
     name = "CDP 8.0.1";
 
     nativeBuildInputs = with super.pkgs; [
       pkg-config
+      autoconf
+      automake118x
+      texinfoInteractive
+      libtool
     ];
 
     buildInputs = with super.pkgs; [
-      clang
       cmake
     ];
 
     buildCommand = ''
+      export CFLAGS="-std=gnu89"
+      
       tar fx ${cdp7}/libaaio/libaaio-0.3.1.tar.bz2
-      libaaio-0.3.1/configure --prefix $out
+      cd libaaio-0.3.1
+
+      substituteInPlace configure \
+        --replace 'am__api_version="1.4"' 'am__api_version="1.18"'
+
+      ./configure --prefix $out
       make install
+
+      cd ..
       mkdir $out/src
       cp -r ${cdp8}/* $out/src
       chmod -R +w $out
@@ -43,7 +55,8 @@ in
       make
       mkdir $out/bin
       mv $out/src/NewRelease/* $out/bin
-      rm -r $out/include $out/lib $out/man $out/src 
+      rm -r $out/include $out/lib $out/man $out/src
     '';
+
   };
 }

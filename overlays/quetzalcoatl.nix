@@ -1,10 +1,10 @@
 self: super:
 {
-  oi-grandad = (super.stdenv.mkDerivation {
-    name = "oi-grandad";
+  quetzalcoatl = (super.stdenv.mkDerivation {
+    name = "quetzalcoatl";
     src = super.fetchurl {
-      url = "https://github.com/publicsamples/Oi-Grandad/releases/download/1.1.7/oi.grandad.vst3.Linux.tar.xz";
-      sha256 = "sha256-lyG2ooXSbRDpM/xnS8aJKX8WXQr9YdriLmoz8yCEHtg=";
+      url = "https://github.com/publicsamples/Quetzalcoatl/releases/download/0.6.5.1/Quetzalcoatl.vst3.tar.xz";
+      sha256 = "sha256-T1gc+B6CvsfxRlb2KNoU0DVGyIcV1NlDpJoRoGva41w=";
     };
     nativeBuildInputs = with super; [
       autoPatchelfHook

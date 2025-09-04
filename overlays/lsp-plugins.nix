@@ -9,7 +9,7 @@ self: super:
       runHook postConfigure
     '';
     postInstall = ''
-      rm -rf $out/share/applications
+      rm -rf $out/share/applications/*.desktop
     '';
   });
 }
