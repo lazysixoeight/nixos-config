@@ -2,7 +2,7 @@
 # Hey me!! Only install what you need!!! #
 #----------------------------------------#
 
-{ pkgs, user, ... }:
+{ pkgs, user, lib, ... }:
 
 {
   imports = [
@@ -48,6 +48,7 @@
     jq # Text Parser
     fd # Better Find
     fzf # Fuzzy Finder
+    alsa-utils # ALSA Utilities
     ripgrep # Faster and modern grep
     ueberzugpp # Alacritty image support hack
     linuxKernel.packages.linux_zen.cpupower # Change CPU frequency at runtime
@@ -56,15 +57,13 @@
     wineWow64Packages.staging # Windows Compatibility Layer
     lutris # Running Windows Games
     bottles # General Prefix Management
-    #wineasio # Dynamic libraries providing ASIO to JACK translation layer
+    wineasio # Dynamic libraries providing ASIO to JACK translation layer
     winetricks # Wine Scripts
 
     # Build Tools/Dependency
     gcc # Because lazy.nvim needs it
     rustup # Needed by some LSPs
-    python312 # Python.
     gdb # Debug Tool
-    brotli.lib
     nix-devShell # Creates flake.nix for devShell
 
     # Archiving
@@ -86,7 +85,7 @@
     obs-studio # Screen Capture
     firefox-bin # Browser
     libreoffice-still # Document Editor
-    alacritty # Cross-platform Terminal
+    kitty # Terminal
     xterminate # Alacritty xterm PATH wrapper
     nicotine-plus # Audio P2P
     prismlauncher # Minecraft Launcher
@@ -127,7 +126,7 @@
 #
 # Display Services
 #
-  displayEnvironment.session = "sway"; # Defined in displayEnvironment.nix
+  displayEnvironment.session = "kde"; # Defined in displayEnvironment.nix
   
 #
 # Boot Settings
@@ -152,6 +151,9 @@
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
+    ];
+    kernelModules = [
+      "snd-aloop"
     ];
     loader.timeout = 2;
   };
@@ -183,6 +185,7 @@
       };
     };
   };
+  security.rtkit.enable = true;
   security.pam.loginLimits = [
     {
       domain = "@audio";
@@ -215,7 +218,16 @@
   services.dbus.enable = true;
   services.printing = {
     enable = true; 
-    drivers = [ pkgs.hplipWithPlugin ];
+    drivers = with pkgs; [
+      hplipWithPlugin
+      gutenprint
+      epson-escpr
+      brlaser
+      foomatic-filters
+      foomatic-db-engine
+      foomatic-db
+      foomatic-db-nonfree
+    ];
   };
   hardware.graphics = {
     enable = true;

@@ -7,7 +7,7 @@ let
 in {
   options.displayEnvironment = {
     session = mkOption {
-      type = types.enum [ "i3" "sway" "hyprland" "gnome" "kde" "none" ];
+      type = types.enum [ "i3" "sway" "hyprland" "gnome" "kde" "enlightenment" "none" ];
       default = "none";
       description = "Which session to use";
     };
@@ -207,15 +207,40 @@ in {
     })
     (mkIf (cfg.session == "kde") {
       services.desktopManager.plasma6.enable = true;
+      services.xserver.enable = true;
+      services.displayManager.defaultSession = "plasmax11";
+      services.displayManager.sddm = {
+        enable = true;
+      };
+      environment.systemPackages = with pkgs; [
+        wl-clipboard
+        kdePackages.oxygen
+        kdePackages.oxygen-icons
+        kdePackages.oxygen-sounds
+      ];
+      environment.plasma6.excludePackages = with pkgs; [
+        
+      ];
+    })
+    (mkIf (cfg.session == "enlightenment") {
+      services.xserver = {
+        enable = true;
+        desktopManager.enlightenment.enable = true;
+      };
       services.displayManager.sddm = {
         enable = true;
       };
       environment.systemPackages = with pkgs; [
         wl-clipboard
       ];
-      environment.plasma6.excludePackages = with pkgs; [
-        
+      environment.enlightenment.excludePackages = with pkgs; [
+        enlightenment.econnman
       ];
+      xdg.portal = {
+        enable = true;
+        config = { common = { default = [ "gtk" ]; }; };
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      };
     })
   ];
 }

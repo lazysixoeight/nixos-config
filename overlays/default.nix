@@ -19,7 +19,7 @@
     #(import ./waybar.nix)
     (import ./oi-grandad.nix)
     (import ./jc303.nix)
-    (import ./quetzalcoatl.nix)
+    (import ./tal-sampler.nix)
     (import ./firefly-synth.nix)
     (import ./oxefmsynth.nix)
     (import ./soundthread.nix)

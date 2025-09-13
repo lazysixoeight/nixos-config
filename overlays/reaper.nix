@@ -2,8 +2,8 @@ self: super:
 
 let 
   pkgsStable = import (fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/nixos-25.05.tar.gz";
-    sha256 = "sha256:1a07clzxj4r16xnsly1bjg722z8bj15vjvszl9aap4hr2k6x9sgh";
+    url = "https://github.com/NixOS/nixpkgs/archive/fe83bbdde2ccdc2cb9573aa846abe8363f79a97a.tar.gz";
+    sha256 = "sha256:17dyfakqa9nafdwcwpndxj5807agw22iwzawicdvbnasfj615fiw";
   }) { inherit (super) system; };
   url_for_platform =
     version: arch:
@@ -53,6 +53,7 @@ in {
             --prefix LD_LIBRARY_PATH : "${
               super.lib.makeLibraryPath [
                 super.curl
+                super.curlWithGnuTls
                 super.lame
                 pkgsStable.libxml2
                 super.libz
