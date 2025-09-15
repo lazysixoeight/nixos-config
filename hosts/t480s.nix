@@ -5,6 +5,10 @@
 { pkgs, user, lib, ... }:
 
 {
+
+#
+# Nix Stuff
+#
   imports = [
     ../hardware-configuration.nix
     ../overlays
@@ -12,15 +16,25 @@
     ./modules/displayEnvironment.nix
   ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix = {
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+    };
+  };
 
+#
+# User & Environment Variables
+#
   users.users.${user} = {
     isNormalUser = true;
     description = "${user}";
-    extraGroups = [ "networkmanager" "wheel" "audio" "input" ];
+    extraGroups = [ "networkmanager" "libvirtd" "wheel" "audio" "input" ];
     shell = pkgs.fish;
   };
   environment.variables = {
@@ -55,14 +69,12 @@
     
     # Wine Stuff
     wineWow64Packages.staging # Windows Compatibility Layer
-    lutris # Running Windows Games
     bottles # General Prefix Management
     wineasio # Dynamic libraries providing ASIO to JACK translation layer
     winetricks # Wine Scripts
 
     # Build Tools/Dependency
     gcc # Because lazy.nvim needs it
-    rustup # Needed by some LSPs
     gdb # Debug Tool
     nix-devShell # Creates flake.nix for devShell
 
@@ -86,9 +98,7 @@
     firefox-bin # Browser
     libreoffice-still # Document Editor
     kitty # Terminal
-    xterminate # Alacritty xterm PATH wrapper
     nicotine-plus # Audio P2P
-    prismlauncher # Minecraft Launcher
     gimp # Image Manipulation Program
     yazi # File Manager
     mpv # Media Player
@@ -119,9 +129,21 @@
   programs.nix-ld.enable = true; # Run unpatched dynamic binaries, ex: Mason.nvim
 
 #
-# Shell
+# Declare Programs
 #
-  programs.fish.enable = true;
+  programs = {
+    fish.enable = true;
+    virt-manager.enable = true;
+  };
+
+#
+# Virtualisation
+#
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+    };
+  };
 
 #
 # Display Services
@@ -240,7 +262,7 @@
   };
 
 #
-# Trivial Stuff
+# Miscellaneous
 #
   time.timeZone = "Asia/Jakarta";
   i18n.defaultLocale = "en_US.UTF-8";

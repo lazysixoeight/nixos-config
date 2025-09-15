@@ -217,9 +217,12 @@ in {
         kdePackages.oxygen
         kdePackages.oxygen-icons
         kdePackages.oxygen-sounds
+        kdePackages.plasma-browser-integration
+        simp1e-cursors
       ];
       environment.plasma6.excludePackages = with pkgs; [
-        
+        kdePackages.okular
+        kdePackages.kate
       ];
     })
     (mkIf (cfg.session == "enlightenment") {
