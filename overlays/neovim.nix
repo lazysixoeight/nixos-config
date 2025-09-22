@@ -15,7 +15,13 @@ self: super: {
             super.glib
             super.stdenv.cc.cc
           ]
-        }" 
+        }" \
+        --prefix PATH : "${
+          super.lib.makeBinPath [
+            super.clang
+            super.rustup
+          ]
+        }"
     '';
   });
 }

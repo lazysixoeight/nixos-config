@@ -19,9 +19,8 @@
     #(import ./waybar.nix)
     (import ./oi-grandad.nix)
     (import ./jc303.nix)
-    (import ./tal-sampler.nix)
-    (import ./firefly-synth.nix)
-    (import ./oxefmsynth.nix)
+    (import ./tal-plugins.nix)
+    (import ./octasine.nix)
     (import ./soundthread.nix)
     #(import ./ffmpeg.nix)
   ];

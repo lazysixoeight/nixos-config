@@ -217,7 +217,7 @@ in {
         kdePackages.oxygen
         kdePackages.oxygen-icons
         kdePackages.oxygen-sounds
-        kdePackages.plasma-browser-integration
+        kdePackages.kalk
         simp1e-cursors
       ];
       environment.plasma6.excludePackages = with pkgs; [
@@ -225,26 +225,5 @@ in {
         kdePackages.kate
       ];
     })
-    (mkIf (cfg.session == "enlightenment") {
-      services.xserver = {
-        enable = true;
-        desktopManager.enlightenment.enable = true;
-      };
-      services.displayManager.sddm = {
-        enable = true;
-      };
-      environment.systemPackages = with pkgs; [
-        wl-clipboard
-      ];
-      environment.enlightenment.excludePackages = with pkgs; [
-        enlightenment.econnman
-      ];
-      xdg.portal = {
-        enable = true;
-        config = { common = { default = [ "gtk" ]; }; };
-        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      };
-    })
   ];
 }
-
