@@ -46,6 +46,7 @@
         firefox-bin # Browser
         libreoffice-still # Document Editor
         kitty # Terminal
+        kdePackages.ghostwriter # Markdown text editor
         nicotine-plus # Audio P2P
         gimp # Image Manipulation Program
         mpv # Media Player
@@ -70,6 +71,7 @@
         
         # Audio Plugins
         distrho-ports # Vitalium, A Wavetable synth
+        vital # Wavetable synth
         oi-grandad # Granular Synth
         octasine # FM Synth
         jc303 # TB303 Emulator

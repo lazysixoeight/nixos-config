@@ -2,14 +2,21 @@
 let
   cfg = config.virtualisationStack;
 in {
-  options.virtualisationStack.enable = mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = "Whether to enable the full virtualisation stack (libvirtd + QEMU + virt-manager + virbr0 firewall)";
+  options.virtualisationStack = {
+    libvirtd.enable = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to enable the libvirtd stack (QEMU, virt-manager and additional network configurations)";
+    };
+    waydroid.enable = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to enable Waydroid";
+    };
   };
 
   config = mkMerge [
-    (mkIf cfg.enable { 
+    (mkIf cfg.libvirtd.enable { 
       virtualisation.libvirtd = {
         enable = true;
         qemu = {
@@ -30,6 +37,9 @@ in {
         enable = true;
         trustedInterfaces = [ "virbr0" ];
       };
+    })
+    (mkIf cfg.waydroid.enable { 
+      virtualisation.waydroid.enable = true;
     })
   ];
   

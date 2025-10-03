@@ -2,6 +2,7 @@
 {
   nixpkgs.overlays = [
     (import ./cdp.nix)
+    (import ./sddm-breeze-wallpaper-hack.nix)
     #(import ./cardinal.nix)
     (import ./flameshot.nix)
     (import ./monokai-gtk-theme.nix)

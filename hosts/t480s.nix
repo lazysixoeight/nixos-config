@@ -50,7 +50,7 @@
     "apps" # General GUI stuff
     "audio" # REAPER, Renoise, etc.
     "wine"
-    "sleuthing" # Hackerman stuff
+    #"sleuthing" # Hackerman stuff
     "extra-fonts"
   ];
   services.flatpak.enable = true;
@@ -61,8 +61,10 @@
     nix-ld.enable = true; # Run unpatched dynamic binaries
   };
 
-  # Enable libvirtd, QEMU and virt-manager
-  virtualisationStack.enable = true;
+  virtualisationStack = {
+    libvirtd.enable = true;
+    waydroid.enable = false;
+  };
   
   # Display service to use
   displayEnvironment.session = "kde"; # Defined in displayEnvironment.nix

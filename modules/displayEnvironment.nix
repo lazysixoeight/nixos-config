@@ -172,10 +172,11 @@ in {
         wl-clipboard
         kgtfo
 
+        gnome-tweaks
         gnomeExtensions.dash-to-dock
         gnomeExtensions.blur-my-shell
-        gnomeExtensions.task-up-ultralite
         gnomeExtensions.appindicator
+        gnomeExtensions.vitals
       ];
       environment.gnome.excludePackages = with pkgs; [
         gnome-terminal
@@ -214,15 +215,17 @@ in {
       };
       environment.systemPackages = with pkgs; [
         wl-clipboard
-        kdePackages.oxygen
-        kdePackages.oxygen-icons
-        kdePackages.oxygen-sounds
         kdePackages.kalk
         simp1e-cursors
+        (writeTextDir "share/sddm/themes/breeze/theme.conf.user" ''
+          [General]
+          background="${sddm-breeze-wallpaper-hack}"
+        '')
       ];
       environment.plasma6.excludePackages = with pkgs; [
         kdePackages.okular
         kdePackages.kate
+        kdePackages.konsole
       ];
     })
   ];

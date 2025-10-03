@@ -7,54 +7,52 @@ let
   }) { inherit (super) system; };
 in {
   reaper = super.reaper.overrideAttrs (oldAttrs: rec { 
-    installPhase =
-      if super.stdenv.hostPlatform.isDarwin then
-        ''
-          runHook preInstall
-          mkdir -p "$out/Applications/Reaper.app"
-          cp -r * "$out/Applications/Reaper.app/"
-          makeWrapper "$out/Applications/Reaper.app/Contents/MacOS/REAPER" "$out/bin/reaper"
-          runHook postInstall
-        ''
-      else
-        ''
-          runHook preInstall
+    pname = "reaper";
+    version = "746";
 
-          HOME="$out/share" XDG_DATA_HOME="$out/share" ./install-reaper.sh \
-            --install $out/opt \
-            --integrate-user-desktop
-          rm $out/opt/REAPER/uninstall-reaper.sh
+    src = super.fetchurl {
+      url = "https://www.reaper.fm/files/7.x/reaper${version}_linux_x86_64.tar.xz";
+      hash = "sha256-8XEy7IXjjw7WbPxpxFP30ivMgi0/iWbtljuYCQ2BzDI=";
+    };
 
-          # This overlay exists because some scripts needed extra runtime dependencies.
-          wrapProgram $out/opt/REAPER/reaper \
-            --prefix LD_LIBRARY_PATH : "${
-              super.lib.makeLibraryPath [
-                super.curl
-                super.curlWithGnuTls
-                super.lame
-                pkgsStable.libxml2
-                super.libz
-                super.ffmpeg
-                super.vlc
-                super.xdotool
-                super.stdenv.cc.cc
+    installPhase = ''
+      runHook preInstall
 
-                super.freetype
-                super.fontconfig
-                super.libpng
-                super.libepoxy
-                super.gtk3
-                super.cairo
-                super.glib
-                super.gdk-pixbuf
-                super.pango
-              ]
-            }"
+      HOME="$out/share" XDG_DATA_HOME="$out/share" ./install-reaper.sh \
+        --install $out/opt \
+        --integrate-user-desktop
+      rm $out/opt/REAPER/uninstall-reaper.sh
 
-          mkdir $out/bin
-          ln -s $out/opt/REAPER/reaper $out/bin/
+      # This overlay exists because some scripts needed extra runtime dependencies.
+      wrapProgram $out/opt/REAPER/reaper \
+        --prefix LD_LIBRARY_PATH : "${
+          super.lib.makeLibraryPath [
+            super.curl
+            super.curlWithGnuTls
+            super.lame
+            pkgsStable.libxml2
+            super.libz
+            super.ffmpeg
+            super.vlc
+            super.xdotool
+            super.stdenv.cc.cc
 
-          runHook postInstall
-        '';
+            super.freetype
+            super.fontconfig
+            super.libpng
+            super.libepoxy
+            super.gtk3
+            super.cairo
+            super.glib
+            super.gdk-pixbuf
+            super.pango
+          ]
+        }"
+
+      mkdir $out/bin
+      ln -s $out/opt/REAPER/reaper $out/bin/
+
+      runHook postInstall
+    '';
   });
 }

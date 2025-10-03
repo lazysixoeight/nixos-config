@@ -17,7 +17,7 @@ in {
     name = "tal-plugins";
     src = super.fetchurl { # TAL-Sampler
       url = "https://www.dropbox.com/scl/fo/cnrn70vcejr2spcll0fcl/AOTiGBCEvPVODKuYIW4Ewwc?rlkey=ykvwc2coldmzdwxlv2fzewkht&st=kejlypz5&dl=1";
-      hash = "sha256-ebYYONcoYX/tqWga+KqECBL2L15LOw9NngX9Mnt4CAY=";
+      hash = "sha256-JKqrEwUVaGny8HsWDGpaBcavpGCD5WG3qTvRiYwzfAw=";
     };
     
     nativeBuildInputs = [ super.autoPatchelfHook super.unzip ];
