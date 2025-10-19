@@ -23,6 +23,7 @@
     (import ./tal-plugins.nix)
     (import ./octasine.nix)
     (import ./soundthread.nix)
+    (import ./glitch2.nix)
     #(import ./ffmpeg.nix)
   ];
 }

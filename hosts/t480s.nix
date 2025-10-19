@@ -67,7 +67,7 @@
   };
   
   # Display service to use
-  displayEnvironment.session = "kde"; # Defined in displayEnvironment.nix
+  displayEnvironment.session = "gnome"; # Defined in displayEnvironment.nix
   
 #
 # Boot Settings

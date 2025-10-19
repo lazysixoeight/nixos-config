@@ -46,11 +46,12 @@
         firefox-bin # Browser
         libreoffice-still # Document Editor
         kitty # Terminal
-        kdePackages.ghostwriter # Markdown text editor
+        lutris # Windows Games Prefix Manager
         nicotine-plus # Audio P2P
         gimp # Image Manipulation Program
         mpv # Media Player
         keepassxc # Password Manager
+        kdePackages.filelight # Disk Space Analyze
         steam # Games
         qbittorrent # Torrenting
         gucharmap # Glyphs Search
@@ -64,18 +65,20 @@
         reaper # Digital Audio Workstation
         reaper-reapack-extension # REAPER Package Manager
         renoise # Tracker-based DAW
+        milkytracker # Music Tracker
         
         # Wine Stuff
         yabridge # Bridge to use Wine plugins on Linux native DAWs
         yabridgectl # Yabridge CLI
         
         # Audio Plugins
-        distrho-ports # Vitalium, A Wavetable synth
-        vital # Wavetable synth
+        distrho-ports # Vitalium, a Wavetable synth
         oi-grandad # Granular Synth
-        octasine # FM Synth
+        dexed # FM Synth
         jc303 # TB303 Emulator
         tal-plugins # TAL-{Sampler,DAC,Drum}
+        glitch2 # FX Sequencer
+        bshapr # Trance Gate
       ];
     })
     (mkIf (elem "wine" config.packageBundles) {
@@ -97,6 +100,7 @@
       fonts.packages = with pkgs; [
         siji
         nerd-fonts.dejavu-sans-mono
+        adwaita-fonts
         corefonts
       ];
     })

@@ -23,6 +23,12 @@ in {
       default = false;
       description = "Enables the base graphical configuration via home manager";
     };
+    
+    baseGnomehmConfig = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enables the GNOME graphical configuration via home manager";
+    };
   };
 
   config = mkMerge [
@@ -33,8 +39,9 @@ in {
     }
 
     {
-      displayEnvironment.x11Base = mkDefault (builtins.elem cfg.session [ "i3" ]);
-      displayEnvironment.basehmConfig = mkDefault (builtins.elem cfg.session [ "i3" "sway" "hyprland" "gnome" ]);
+      displayEnvironment.x11Base = mkDefault (builtins.elem cfg.session [ "i3" "gnome" ]);
+      displayEnvironment.basehmConfig = mkDefault (builtins.elem cfg.session [ "i3" "sway" "hyprland" ]);
+      displayEnvironment.baseGnomehmConfig = mkDefault (builtins.elem cfg.session [ "gnome" ]);
     }
     
     (mkIf cfg.x11Base {
@@ -93,7 +100,54 @@ in {
         adwaita-qt6
       ];
     })
-
+    (mkIf cfg.baseGnomehmConfig {
+      qt = {
+        enable = true;
+        platformTheme = "qt5ct";
+      };
+      home-manager.users.${user} = {
+        home.pointerCursor = {
+          name = "Simp1e-Adw";
+          size = 24;
+          package = pkgs.simp1e-cursors;
+          gtk.enable = true;
+        };
+        dconf = {
+          enable = true;
+          settings = {
+            "org/gnome/desktop/interface" = {
+              color-scheme = "prefer-dark";
+            };
+          };
+        };
+        gtk = {
+          enable = true;
+          # Set font
+          font = {
+            name = "Adwaita Sans";
+            size = 11;
+          };
+          # Set GTK theme
+          theme = {
+            name = "Adwaita-dark";
+            package = pkgs.gnome-themes-extra;
+          };
+          # Set GTK icon theme
+          iconTheme = {
+            name = "MoreWaita";
+            package = pkgs.morewaita-icon-theme;
+          };
+        };
+        home.stateVersion = "25.05";
+      };
+      environment.systemPackages = with pkgs; [
+        #qgnomeplatform
+        #qgnomeplatform-qt6
+        adwaita-qt
+        adwaita-qt6
+      ];
+    })
+    # This is where display server declarations starts
     (mkIf (cfg.session == "i3") {
       services.xserver.windowManager.i3 = {
         enable = true;
@@ -171,12 +225,16 @@ in {
       environment.systemPackages = with pkgs; [
         wl-clipboard
         kgtfo
+        menulibre
+        strawberry
 
         gnome-tweaks
         gnomeExtensions.dash-to-dock
         gnomeExtensions.blur-my-shell
+        gnomeExtensions.just-perfection
         gnomeExtensions.appindicator
-        gnomeExtensions.vitals
+        gnomeExtensions.clipboard-indicator
+        gnomeExtensions.caffeine
       ];
       environment.gnome.excludePackages = with pkgs; [
         gnome-terminal
@@ -191,6 +249,7 @@ in {
         gnome-clocks
         gnome-disk-utility
         gnome-logs
+        gnome-software
         gnome-font-viewer
         gnome-connections
         gnome-tour
