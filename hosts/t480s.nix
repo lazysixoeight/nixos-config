@@ -150,7 +150,7 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       mesa
-      vaapiIntel
+      intel-vaapi-driver
       intel-media-driver
     ];
   };

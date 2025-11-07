@@ -1,8 +1,10 @@
 { lib, config, pkgs, ... }: with lib;
 let
-
-cfg = config.bootSettings;
-
+  cfg = config.bootSettings;
+  wallpaper = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/NixOS/nixos-artwork/refs/heads/master/wallpapers/nix-wallpaper-stripes.png";
+    sha256 = "sha256:116337wv81xfg0g0bsylzzq2b7nbj6hjyh795jfc9mvzarnalwd3";
+  };
 in {
   options.bootSettings = {
     linuxKernel = mkOption {
@@ -46,6 +48,7 @@ in {
         enable = true;
         efiSupport = true;
         device = "nodev";
+        splashImage = wallpaper;
       };
     })
     (mkIf cfg.plymouth.enable {

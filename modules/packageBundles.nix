@@ -16,7 +16,7 @@
         fzf # Fuzzy Finder
         killall # Terminates all running processes by name
         python313 # Don't mind me =)
-        libvirt-glib
+        nix-search-cli # Search packages on search.nixos.org
 
         atool # Unpacking and packing wrapper
         unrar # .rar
@@ -48,8 +48,10 @@
         kitty # Terminal
         lutris # Windows Games Prefix Manager
         nicotine-plus # Audio P2P
+        strawberry # Music Player
         gimp # Image Manipulation Program
-        mpv # Media Player
+        vlc # Media Player
+        cockatrice # Virtual Tabletop
         keepassxc # Password Manager
         kdePackages.filelight # Disk Space Analyze
         steam # Games
@@ -66,6 +68,7 @@
         reaper-reapack-extension # REAPER Package Manager
         renoise # Tracker-based DAW
         milkytracker # Music Tracker
+        carla # Technically a DAW
         
         # Wine Stuff
         yabridge # Bridge to use Wine plugins on Linux native DAWs
@@ -76,13 +79,15 @@
         oi-grandad # Granular Synth
         dexed # FM Synth
         jc303 # TB303 Emulator
-        tal-plugins # TAL-{Sampler,DAC,Drum}
+        tal-plugins # TAL-{DAC,Drum}
         glitch2 # FX Sequencer
-        bshapr # Trance Gate
+        generic-drum # Drum Synthesizer \ Awesome plugin by Ryukau
+        fluida-lv2 # SoundFont Player
       ];
     })
     (mkIf (elem "wine" config.packageBundles) {
       environment.systemPackages = with pkgs; [
+        bottles # Prefix Management
         wineWow64Packages.staging # The Windows Compatibility Layer
         wineasio # Dynamic libraries providing ASIO to JACK translation layer
         winetricks # Wine Scripts
@@ -98,9 +103,7 @@
     })
     (mkIf (elem "extra-fonts" config.packageBundles) {
       fonts.packages = with pkgs; [
-        siji
         nerd-fonts.dejavu-sans-mono
-        adwaita-fonts
         corefonts
       ];
     })

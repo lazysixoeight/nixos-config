@@ -7,17 +7,12 @@ tal-drum = super.fetchurl {
   hash = "sha256-ljGFaYntOePZgbhysjXq0KO4efBLi6a3IwOIbb31ghQ=";
 };
 
-tal-dac = super.fetchurl { 
-  url = "https://www.dropbox.com/scl/fo/szpd5dcb3js3506cznfz2/AN-0qYEj-113X2yPEab5rf0?rlkey=1iab3htzr10bt8ujcariwi8ks&st=3a2bbxmm&dl=1";
-  hash = "sha256-niSbjT7FaX90AA1+PJ0RUMuEsBFa8seOGDSSsjDLMlU=";
-};
-
 in {
   tal-plugins = (super.stdenv.mkDerivation { 
     name = "tal-plugins";
-    src = super.fetchurl { # TAL-Sampler
-      url = "https://www.dropbox.com/scl/fo/cnrn70vcejr2spcll0fcl/AOTiGBCEvPVODKuYIW4Ewwc?rlkey=ykvwc2coldmzdwxlv2fzewkht&st=kejlypz5&dl=1";
-      hash = "sha256-JKqrEwUVaGny8HsWDGpaBcavpGCD5WG3qTvRiYwzfAw=";
+    src = super.fetchurl { # TAL-DAC
+      url = "https://www.dropbox.com/scl/fo/szpd5dcb3js3506cznfz2/AN-0qYEj-113X2yPEab5rf0?rlkey=1iab3htzr10bt8ujcariwi8ks&st=3a2bbxmm&dl=1";
+      hash = "sha256-niSbjT7FaX90AA1+PJ0RUMuEsBFa8seOGDSSsjDLMlU=";
     };
     
     nativeBuildInputs = [ super.autoPatchelfHook super.unzip ];
@@ -33,7 +28,6 @@ in {
     unpackPhase = ''
       unzip "$src" -x / "ReadmeLinux.txt"
       unzip "${tal-drum}" -x / "ReadmeLinux.txt"
-      unzip "${tal-dac}" -x / "ReadmeLinux.txt"
     '';
 
     installPhase = ''
@@ -46,7 +40,7 @@ in {
 }
 
 
-# Lucky you!
+# Lucky you! (TAL-Sampler key also works for TAL-DAC)
 /*
 -- COPY LICENSE KEY FROM HERE --
 Product: TAL-Sampler

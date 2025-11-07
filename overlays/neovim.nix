@@ -19,6 +19,7 @@ self: super: {
         --prefix PATH : "${
           super.lib.makeBinPath [
             super.clang
+            super.clang-tools
             super.rustup
           ]
         }"

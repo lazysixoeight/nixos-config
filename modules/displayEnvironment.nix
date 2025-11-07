@@ -7,7 +7,7 @@ let
 in {
   options.displayEnvironment = {
     session = mkOption {
-      type = types.enum [ "i3" "sway" "hyprland" "gnome" "kde" "enlightenment" "none" ];
+      type = types.enum [ "i3" "sway" "hyprland" "gnome" "kde" "cosmic" "none" ];
       default = "none";
       description = "Which session to use";
     };
@@ -94,8 +94,6 @@ in {
         home.stateVersion = "25.05";
       };
       environment.systemPackages = with pkgs; [
-        libsForQt5.qt5ct
-        kdePackages.qt6ct
         adwaita-qt
         adwaita-qt6
       ];
@@ -104,6 +102,7 @@ in {
       qt = {
         enable = true;
         platformTheme = "qt5ct";
+        style = "kvantum";
       };
       home-manager.users.${user} = {
         home.pointerCursor = {
@@ -124,7 +123,7 @@ in {
           enable = true;
           # Set font
           font = {
-            name = "Adwaita Sans";
+            name = "Inter";
             size = 11;
           };
           # Set GTK theme
@@ -134,15 +133,13 @@ in {
           };
           # Set GTK icon theme
           iconTheme = {
-            name = "MoreWaita";
-            package = pkgs.morewaita-icon-theme;
+            name = "Papirus-Dark";
+            package = pkgs.papirus-icon-theme;
           };
         };
         home.stateVersion = "25.05";
       };
       environment.systemPackages = with pkgs; [
-        #qgnomeplatform
-        #qgnomeplatform-qt6
         adwaita-qt
         adwaita-qt6
       ];
@@ -161,6 +158,9 @@ in {
         dunst
         rofi
         xclip
+      ];
+      fonts.packages = with pkgs; [
+        siji
       ];
       xdg.portal = {
         enable = true;
@@ -181,8 +181,11 @@ in {
         swaylock-effects
         swayidle
         dunst
-        rofi-wayland
+        rofi
         wl-clipboard
+      ];
+      fonts.packages = with pkgs; [
+        siji
       ];
       services.displayManager.ly.enable = true;
       xdg.portal = {
@@ -226,7 +229,6 @@ in {
         wl-clipboard
         kgtfo
         menulibre
-        strawberry
 
         gnome-tweaks
         gnomeExtensions.dash-to-dock
@@ -235,6 +237,7 @@ in {
         gnomeExtensions.appindicator
         gnomeExtensions.clipboard-indicator
         gnomeExtensions.caffeine
+        gnomeExtensions.tiling-assistant
       ];
       environment.gnome.excludePackages = with pkgs; [
         gnome-terminal
@@ -264,6 +267,9 @@ in {
         file-roller
         seahorse
       ];
+      fonts.packages = with pkgs; [
+        inter
+      ];
     })
     (mkIf (cfg.session == "kde") {
       services.desktopManager.plasma6.enable = true;
@@ -285,6 +291,23 @@ in {
         kdePackages.okular
         kdePackages.kate
         kdePackages.konsole
+      ];
+    })
+    (mkIf (cfg.session == "cosmic") {
+      services.desktopManager.cosmic.enable = true;
+      services.displayManager.cosmic-greeter.enable = true;
+      environment.systemPackages = with pkgs; [
+        wl-clipboard
+        simp1e-cursors
+        papirus-icon-theme
+      ];
+      environment.cosmic.excludePackages = with pkgs; [
+        cosmic-term
+        cosmic-edit
+        cosmic-store
+      ];
+      fonts.packages = with pkgs; [
+        inter
       ];
     })
   ];
